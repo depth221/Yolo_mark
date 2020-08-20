@@ -169,9 +169,9 @@ public:
 
 };
 
-std::atomic<bool> right_button_click;
+std::atomic<bool> right_button_click, right_button_click_shift;
 std::atomic<int> move_rect_id;
-std::atomic<bool> move_rect;
+std::atomic<bool> move_rect, move_rect_all;
 std::atomic<bool> clear_marks;
 std::atomic<bool> copy_previous_marks(false);
 std::atomic<bool> tracker_copy_previous_marks(false);
@@ -214,26 +214,56 @@ void callback_mouse_click(int event, int x, int y, int flags, void* user_data)
     }
     else if (event == cv::EVENT_LBUTTONUP)
     {
-        x_size = abs(x - x_start);
-        y_size = abs(y - y_start);
-        x_end = max(x, 0);
-        y_end = max(y, 0);
-        draw_select = false;
-        selected = true;
-        //std::cout << "cv::EVENT_LBUTTONUP \n";
+		x_size = abs(x - x_start);
+		y_size = abs(y - y_start);
+		x_end = max(x, 0);
+		y_end = max(y, 0);
+		draw_select = false;
+		selected = true;
+		//std::cout << "cv::EVENT_LBUTTONUP \n";
     }
     else if (event == cv::EVENT_RBUTTONDOWN)
     {
-        right_button_click = true;
+		if (flags == cv::EVENT_FLAG_SHIFTKEY)
+		{
+			right_button_click_shift = true;
+			x_start = x;
+        	y_start = y;
+			std::cout << "cv::EVENT_RBUTTONDOWN, Shift \n";
+			std::cout << "right_button_click_shift: " << right_button_click_shift << std::endl;
+			std::cout << "right_button_click: " << right_button_click << std::endl;
+			
+		}
+		else
+		{	
+			if (!right_button_click_shift)
+			{
+				right_button_click = true;
+			}
 
-        x_start = x;
-        y_start = y;
-        std::cout << "cv::EVENT_RBUTTONDOWN \n";
+        	x_start = x;
+        	y_start = y;
+        	std::cout << "cv::EVENT_RBUTTONDOWN \n";
+			std::cout << "right_button_click_shift: " << right_button_click_shift << std::endl;
+			std::cout << "right_button_click: " << right_button_click << std::endl;
+		}
     }
     else if (event == cv::EVENT_RBUTTONUP)
     {
-        right_button_click = false;
-        move_rect = true;
+        if (right_button_click)
+		{
+			right_button_click = false;
+			move_rect = true;
+			std::cout << "move_rect_all: " << move_rect_all << std::endl;
+			std::cout << "move_rect: " << move_rect << std::endl;
+		}
+		else if (right_button_click_shift)
+		{
+			right_button_click_shift = false;
+			move_rect_all = true;
+			std::cout << "move_rect_all: " << move_rect_all << std::endl;
+			std::cout << "move_rect: " << move_rect << std::endl;
+		}
     }
     if (event == cv::EVENT_RBUTTONDBLCLK)
     {
@@ -831,13 +861,35 @@ int main(int argc, char *argv[])
                 if (selected_id >= 0) current_coord_vec.erase(current_coord_vec.begin() + selected_id);
             }
 
+			// show all moving rect
+			if (right_button_click_shift == true)
+			{
+				int x_delta = x_end - x_start;
+                int y_delta = y_end - y_start;
+
+				Scalar color_rect = Scalar(300, 200, 100);
+
+				for (auto &i : current_coord_vec)
+				{	
+					auto rect = i.abs_rect;
+                	rect.x += x_delta;
+                	rect.y += y_delta;
+
+					rectangle(full_image_roi, rect, color_rect, mark_line_width);
+				}
+
+				
+                
+			}
+
             // show moving rect
-            if (right_button_click == true)
+            else if (right_button_click == true)
             {
                 if (move_rect_id < 0) move_rect_id = selected_id;
 
                 int x_delta = x_end - x_start;
                 int y_delta = y_end - y_start;
+
                 auto rect = current_coord_vec[move_rect_id].abs_rect;
                 rect.x += x_delta;
                 rect.y += y_delta;
@@ -846,8 +898,23 @@ int main(int argc, char *argv[])
                 rectangle(full_image_roi, rect, color_rect, mark_line_width);
             }
 
-            // complete moving label rect
-            if (move_rect && move_rect_id >= 0) {
+			// complete moving all label rect
+            if (move_rect_all) {
+                int x_delta = x_end - x_start;
+                int y_delta = y_end - y_start;
+
+				for (auto &i : current_coord_vec)
+				{
+                	i.abs_rect.x += x_delta;
+                	i.abs_rect.y += y_delta;
+				}
+
+                move_rect_all = false;
+                move_rect_id = -1;
+            }
+
+			// complete moving label rect
+            else if (move_rect && move_rect_id >= 0) {
                 int x_delta = x_end - x_start;
                 int y_delta = y_end - y_start;
                 current_coord_vec[move_rect_id].abs_rect.x += x_delta;
