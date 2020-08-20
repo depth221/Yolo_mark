@@ -82,6 +82,7 @@ Button | Description |
 --- | --- |
 Left | Draw box
 Right | Move box
+<kbd>SHIFT</kbd> + Right | Move all box
 
 #### Keyboard Shortcuts
 
