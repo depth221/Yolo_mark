@@ -1013,16 +1013,13 @@ int main(int argc, char *argv[])
 
 			case 2424832:   // <-
 			case 65361:     // <-
-			case 91:		// [
 				--trackbar_value;
 				break;
 			case 2555904:   // ->
 			case 65363:     // ->
-			case 93:		// ]
 				++trackbar_value;
 				break;
-			case 61: // =
-			case 65579:   // +
+			case 93:		// ]
 				std::cout << "pressed '+' key" << std::endl;
 
 				if (selected_id >= 0)
@@ -1042,8 +1039,7 @@ int main(int argc, char *argv[])
 					}
 				}
 				break;
-			case 45: // -
-			case 65631:   // _
+			case 91:		// [
 				std::cout << "pressed '-' key" << std::endl;
 
 				if (selected_id >= 0)
