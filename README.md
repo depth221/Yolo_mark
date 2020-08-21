@@ -82,7 +82,7 @@ Button | Description |
 --- | --- |
 Left | Draw box
 Right | Move box
-<kbd>SHIFT</kbd> + Right | Move all box
+<kbd>SHIFT</kbd> + Right | Move all boxs ☆
 
 #### Keyboard Shortcuts
 
@@ -90,6 +90,8 @@ Shortcut | Description |
 --- | --- |
 <kbd>→</kbd> | Next image |
 <kbd>←</kbd> | Previous image |
+<kbd>[</kbd> | Reduce the selected box ☆|
+<kbd>]</kbd> | Enlarge the selected box ☆|
 <kbd>r</kbd> | Delete selected box (mouse hovered) |
 <kbd>c</kbd> | Clear all marks on the current image |
 <kbd>p</kbd> | Copy previous mark |
