@@ -1,4 +1,4 @@
-# Yolo_mark
+# Yolo_mark for SNUZERO
 **Windows** & **Linux** GUI for marking bounded boxes of objects in images for training Yolo v3 and v2
 
 * To compile on **Windows** open `yolo_mark.sln` in MSVS2013/2015, compile it **x64 & Release** and run the file: `x64/Release/yolo_mark.cmd`. Change paths in `yolo_mark.sln` to the OpenCV 2.x/3.x installed on your computer:
@@ -82,6 +82,7 @@ Button | Description |
 --- | --- |
 Left | Draw box
 Right | Move box
+<kbd>SHIFT</kbd> + Right | Move all box
 
 #### Keyboard Shortcuts
 
