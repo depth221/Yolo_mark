@@ -170,6 +170,7 @@ public:
 };
 
 std::atomic<bool> right_button_click, right_button_click_shift;
+std::atomic<bool> mouse_wheel_up, mouse_wheel_down;
 std::atomic<int> move_rect_id;
 std::atomic<bool> move_rect, move_rect_all;
 std::atomic<bool> clear_marks;
@@ -195,7 +196,7 @@ Rect next_img_rect(1280 - 50, 0, 50, 100);
 
 
 void callback_mouse_click(int event, int x, int y, int flags, void* user_data)
-{
+{	
     if (event == cv::EVENT_LBUTTONDBLCLK)
     {
         std::cout << "cv::EVENT_LBUTTONDBLCLK \n";
@@ -230,8 +231,6 @@ void callback_mouse_click(int event, int x, int y, int flags, void* user_data)
 			x_start = x;
         	y_start = y;
 			std::cout << "cv::EVENT_RBUTTONDOWN, Shift \n";
-			std::cout << "right_button_click_shift: " << right_button_click_shift << std::endl;
-			std::cout << "right_button_click: " << right_button_click << std::endl;
 			
 		}
 		else
@@ -244,8 +243,6 @@ void callback_mouse_click(int event, int x, int y, int flags, void* user_data)
         	x_start = x;
         	y_start = y;
         	std::cout << "cv::EVENT_RBUTTONDOWN \n";
-			std::cout << "right_button_click_shift: " << right_button_click_shift << std::endl;
-			std::cout << "right_button_click: " << right_button_click << std::endl;
 		}
     }
     else if (event == cv::EVENT_RBUTTONUP)
@@ -254,17 +251,14 @@ void callback_mouse_click(int event, int x, int y, int flags, void* user_data)
 		{
 			right_button_click = false;
 			move_rect = true;
-			std::cout << "move_rect_all: " << move_rect_all << std::endl;
-			std::cout << "move_rect: " << move_rect << std::endl;
 		}
 		else if (right_button_click_shift)
 		{
 			right_button_click_shift = false;
 			move_rect_all = true;
-			std::cout << "move_rect_all: " << move_rect_all << std::endl;
-			std::cout << "move_rect: " << move_rect << std::endl;
 		}
     }
+
     if (event == cv::EVENT_RBUTTONDBLCLK)
     {
         std::cout << "cv::EVENT_RBUTTONDBLCLK \n";
@@ -842,7 +836,8 @@ int main(int argc, char *argv[])
                     if (selected_id < 0) {
                         color_rect = Scalar(100, 200, 300);
                         selected_id = k;
-                        rectangle(full_image_roi, i.abs_rect, color_rect, mark_line_width*2);
+
+						rectangle(full_image_roi, i.abs_rect, color_rect, mark_line_width*2);
                     }
                 }
 
@@ -876,10 +871,7 @@ int main(int argc, char *argv[])
                 	rect.y += y_delta;
 
 					rectangle(full_image_roi, rect, color_rect, mark_line_width);
-				}
-
-				
-                
+				}       
 			}
 
             // show moving rect
@@ -984,6 +976,7 @@ int main(int argc, char *argv[])
 #else
 			int pressed_key = cv::waitKey(20);		// OpenCV 2.x
 #endif
+			//std::cout << pressed_key << std::endl;
 
 			if (pressed_key >= 0)
 				for (int i = 0; i < 5; ++i) cv::waitKey(1);
@@ -1027,6 +1020,42 @@ int main(int argc, char *argv[])
 			case 65363:     // ->
 			case 93:		// ]
 				++trackbar_value;
+				break;
+			case 61: // =
+			case 65579:   // +
+				std::cout << "pressed '+' key" << std::endl;
+
+				if (selected_id >= 0)
+				{	
+					cv::Rect_<float> &rect_up = current_coord_vec.at(selected_id).abs_rect;
+
+					if ((rect_up.x + rect_up.width / 2) - 1 >= 0)
+					{
+						rect_up.x -= 1;
+						rect_up.width += 2;
+					}
+						
+					if ((rect_up.y + rect_up.height / 2) - 1 >= 0)
+					{
+						rect_up.y -= 1;
+						rect_up.height += 2;
+					}
+				}
+				break;
+			case 45: // -
+			case 65631:   // _
+				std::cout << "pressed '-' key" << std::endl;
+
+				if (selected_id >= 0)
+				{
+					cv::Rect_<float> &rect_down = current_coord_vec.at(selected_id).abs_rect;
+
+					rect_down.x += 1;
+					rect_down.width -= 2;
+
+					rect_down.y += 1;
+					rect_down.height -= 2;
+				}
 				break;
 			case 'c':       // c
 			case 1048675:	// c

@@ -9,3 +9,4 @@ add_executable( yolo_mark ${sources} )
 target_compile_options( yolo_mark PUBLIC -std=c++11 -fpermissive -w -Wall )
 
 target_link_libraries( yolo_mark ${OpenCV_LIBS} -L/usr/lib64 -ldl )
+#set_target_properties(yolo_mark PROPERTIES COMPILE_FLAGS "-O3")
