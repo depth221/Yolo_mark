@@ -1155,6 +1155,36 @@ int main(int argc, char *argv[])
 				tmp_typed_number = 0;
 				shift_typed = true;
 				break;
+			case 65659:     // shift + [
+				for (auto &i : current_coord_vec)
+				{	
+					cv::Rect_<float> &rect_down = i.abs_rect;
+
+					rect_down.x += 1;
+					rect_down.width -= 2;
+
+					rect_down.y += 1;
+					rect_down.height -= 2;
+				}
+				break;
+			case 65661:     // shift + ]
+				for (auto &i : current_coord_vec)
+				{	
+					cv::Rect_<float> &rect_up = i.abs_rect;
+
+					if ((rect_up.x + rect_up.width / 2) - 1 >= 0)
+					{
+						rect_up.x -= 1;
+						rect_up.width += 2;
+					}
+						
+					if ((rect_up.y + rect_up.height / 2) - 1 >= 0)
+					{
+						rect_up.y -= 1;
+						rect_up.height += 2;
+					}
+				}
+				break;
 			default:
 				;
 			}
