@@ -172,6 +172,9 @@ public:
 std::atomic<bool> right_button_click, right_button_click_shift;
 std::atomic<bool> mouse_wheel_up, mouse_wheel_down;
 std::atomic<int> move_rect_id;
+std::atomic<bool> shift_typed(false);
+std::atomic<int> typed_number(0);
+std::atomic<int> tmp_typed_number(-1);
 std::atomic<bool> move_rect, move_rect_all;
 std::atomic<bool> clear_marks;
 std::atomic<bool> copy_previous_marks(false);
@@ -976,7 +979,7 @@ int main(int argc, char *argv[])
 #else
 			int pressed_key = cv::waitKey(20);		// OpenCV 2.x
 #endif
-			//std::cout << pressed_key << std::endl;
+			std::cout << pressed_key << std::endl;
 
 			if (pressed_key >= 0)
 				for (int i = 0; i < 5; ++i) cv::waitKey(1);
@@ -984,9 +987,22 @@ int main(int argc, char *argv[])
 			if (exit_flag) break;	// exit after saving
 			if (pressed_key == 27 || pressed_key == 1048603) exit_flag = true;// break;  // ESC - save & exit
 
-			if (pressed_key >= '0' && pressed_key <= '9') current_obj_id = pressed_key - '0';   // 0 - 9
-			if (pressed_key >= 1048624 && pressed_key <= 1048633) current_obj_id = pressed_key - 1048624;   // 0 - 9
-
+			if (pressed_key >= '0' && pressed_key <= '9')
+			{
+				if (selected_id >= 0)
+				{
+					current_coord_vec.at(selected_id).id = pressed_key - '0';
+				}
+				current_obj_id = pressed_key - '0';   // 0 - 9
+			}
+			if (pressed_key >= 1048624 && pressed_key <= 1048633)
+			{
+				if (selected_id >= 0)
+				{
+					current_coord_vec.at(selected_id).id = pressed_key - 1048624;
+				}
+				current_obj_id = pressed_key - 1048624;   // 0 - 9
+			}
 			switch (pressed_key)
 			{
 			//case 'z':		// z
@@ -1074,7 +1090,7 @@ int main(int argc, char *argv[])
 			case 'h':		// h
 			case 1048680:	// h
 				show_help = !show_help;
-			break;
+				break;
 			case 'k':
 			case 1048683:
 				show_mark_class = !show_mark_class;
@@ -1083,8 +1099,106 @@ int main(int argc, char *argv[])
             case 1048690:   // r
                 delete_selected = true;
                 break;
+			case 65505:     // shift
+			case 65506:     // shift
+				std::cout << "pressed 'shift' key" << std::endl;
+				typed_number = 0;
+				shift_typed = true;
+				break;
+			case 65569:	    // shift + 1
+			case 130993:    // shift + 1
+				tmp_typed_number = 1;
+				shift_typed = true;
+				break;
+			case 65600:	    // shift + 2
+			case 130994:    // shift + 2
+				tmp_typed_number = 2;
+				shift_typed = true;
+				break;
+			case 65571:	    // shift + 3
+			case 130995:    // shift + 3
+				tmp_typed_number = 3;
+				shift_typed = true;
+				break;
+			case 65572:	    // shift + 4
+			case 130996:    // shift + 4
+				tmp_typed_number = 4;
+				shift_typed = true;
+				break;
+			case 65573:	    // shift + 5
+			case 130997:    // shift + 5
+				tmp_typed_number = 5;
+				shift_typed = true;
+				break;
+			case 65630:	    // shift + 6
+			case 130998:    // shift + 6
+				tmp_typed_number = 6;
+				shift_typed = true;
+				break;
+			case 65574:	    // shift + 7
+			case 130999:    // shift + 7
+				tmp_typed_number = 7;
+				shift_typed = true;
+				break;
+			case 65578:	    // shift + 8
+			case 131000:    // shift + 8
+				tmp_typed_number = 8;
+				shift_typed = true;
+				break;
+			case 65576:	    // shift + 9
+			case 131001:    // shift + 9
+				tmp_typed_number = 9;
+				shift_typed = true;
+				break;
+			case 65577:	    // shift + 0
+			case 130992:    // shift + 0
+				tmp_typed_number = 0;
+				shift_typed = true;
+				break;
 			default:
 				;
+			}
+
+			// insert 2-order numbers
+			int *tmp = new int;
+
+			if (shift_typed && tmp_typed_number != -1 && (typed_number * 10 + tmp_typed_number > max_object_id))
+			{
+				if (tmp_typed_number == 0)
+				{
+					typed_number = 0;
+					current_obj_id = 0;
+
+					if (selected_id >= 0)
+					{
+						current_coord_vec.at(selected_id).id = 0;
+					}
+				}
+				else
+				{
+					*tmp = tmp_typed_number;
+					typed_number = *tmp;
+				}
+				tmp_typed_number = -1;
+			}
+			else if (shift_typed && tmp_typed_number != -1)
+			{
+				typed_number = typed_number * 10 + tmp_typed_number;
+				tmp_typed_number = -1;
+			}
+
+			delete tmp;
+
+			if (typed_number != 0 && shift_typed) //&& !( 65505 <= pressed_key <= 65630)
+			{	
+				current_obj_id = typed_number;
+
+				if (selected_id >= 0)
+				{
+					current_coord_vec.at(selected_id).id = typed_number;
+				}
+
+				shift_typed = false;
 			}
 
             if(tracker_copy_previous_marks)
