@@ -979,7 +979,7 @@ int main(int argc, char *argv[])
 #else
 			int pressed_key = cv::waitKey(20);		// OpenCV 2.x
 #endif
-			//std::cout << pressed_key << std::endl;
+			std::cout << pressed_key << std::endl;
 
 			if (pressed_key >= 0)
 				for (int i = 0; i < 5; ++i) cv::waitKey(1);
@@ -1026,15 +1026,26 @@ int main(int argc, char *argv[])
 			case 1048608:	// SPACE
 				++trackbar_value;
 				break;
+			
+			case 'q':        // q
+				if (selected_id >= 0)
+				{	
+					coord_t &rect_hovered = current_coord_vec.at(selected_id);
+
+					rect_hovered.id = current_obj_id;
+				}
+				break;
 
 			case 2424832:   // <-
 			case 65361:     // <-
 				--trackbar_value;
 				break;
+
 			case 2555904:   // ->
 			case 65363:     // ->
 				++trackbar_value;
 				break;
+
 			case 93:		// ]
 				std::cout << "pressed '+' key" << std::endl;
 
