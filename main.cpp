@@ -979,7 +979,7 @@ int main(int argc, char *argv[])
 #else
 			int pressed_key = cv::waitKey(20);		// OpenCV 2.x
 #endif
-			std::cout << pressed_key << std::endl;
+			//std::cout << pressed_key << std::endl;
 
 			if (pressed_key >= 0)
 				for (int i = 0; i < 5; ++i) cv::waitKey(1);
