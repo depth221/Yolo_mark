@@ -1118,60 +1118,70 @@ int main(int argc, char *argv[])
 				typed_number = 0;
 				shift_typed = true;
 				break;
+			case '!':       // shift + 1
 			case 65569:	    // shift + 1
 			case 130993:    // shift + 1
 			case 1114145:   // shift + 1
 				tmp_typed_number = 1;
 				shift_typed = true;
 				break;
+			case '@':       // shift + 2
 			case 65600:	    // shift + 2
 			case 130994:    // shift + 2
 			case 1114176:   // shift + 2
 				tmp_typed_number = 2;
 				shift_typed = true;
 				break;
+			case '#':       // shift + 3
 			case 65571:	    // shift + 3
 			case 130995:    // shift + 3
 			case 1114147:   // shift + 3
 				tmp_typed_number = 3;
 				shift_typed = true;
 				break;
+			case '$':       // shift + 4
 			case 65572:	    // shift + 4
 			case 130996:    // shift + 4
 			case 1114148:   // shift + 4
 				tmp_typed_number = 4;
 				shift_typed = true;
 				break;
+			case '%':       // shift + 5
 			case 65573:	    // shift + 5
 			case 130997:    // shift + 5
 			case 1114149:   // shift + 5
 				tmp_typed_number = 5;
 				shift_typed = true;
 				break;
+			case '^':       // shift + 6
 			case 65630:	    // shift + 6
 			case 130998:    // shift + 6
 			case 1114206:   // shift + 6
 				tmp_typed_number = 6;
 				shift_typed = true;
 				break;
+			case '&':       // shift + 7
 			case 65574:	    // shift + 7
 			case 130999:    // shift + 7
 			case 1114150:   // shift + 7
 				tmp_typed_number = 7;
 				shift_typed = true;
 				break;
+			case '*':       // shift + 8
 			case 65578:	    // shift + 8
 			case 131000:    // shift + 8
 			case 1114154:   // shift + 8
 				tmp_typed_number = 8;
 				shift_typed = true;
 				break;
+			case '(':       // shift + 9
 			case 65576:	    // shift + 9
 			case 131001:    // shift + 9
 			case 1114152:   // shift + 9
 				tmp_typed_number = 9;
 				shift_typed = true;
 				break;
+			case ')':       // shift + 0
 			case 65577:	    // shift + 0
 			case 130992:    // shift + 0
 			case 1114153:   // shift + 0
