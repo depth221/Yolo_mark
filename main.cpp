@@ -228,7 +228,9 @@ void callback_mouse_click(int event, int x, int y, int flags, void* user_data)
     }
     else if (event == cv::EVENT_RBUTTONDOWN)
     {
-		if (flags == cv::EVENT_FLAG_SHIFTKEY)
+		std::cout << flags << std::endl;
+		//if (flags == cv::EVENT_FLAG_SHIFTKEY)
+		if (flags == 48)
 		{
 			right_button_click_shift = true;
 			x_start = x;
@@ -979,7 +981,7 @@ int main(int argc, char *argv[])
 #else
 			int pressed_key = cv::waitKey(20);		// OpenCV 2.x
 #endif
-			std::cout << pressed_key << std::endl;
+			//std::cout << pressed_key << std::endl;
 
 			if (pressed_key >= 0)
 				for (int i = 0; i < 5; ++i) cv::waitKey(1);
@@ -1045,6 +1047,7 @@ int main(int argc, char *argv[])
 				break;
 
 			case 93:		// ]
+			case 1048669:   // ]
 				std::cout << "pressed '+' key" << std::endl;
 
 				if (selected_id >= 0)
@@ -1065,6 +1068,7 @@ int main(int argc, char *argv[])
 				}
 				break;
 			case 91:		// [
+			case 1048667:   // [
 				std::cout << "pressed '-' key" << std::endl;
 
 				if (selected_id >= 0)
